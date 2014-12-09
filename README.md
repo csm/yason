@@ -1,6 +1,8 @@
 # yason
 
-A binary data format for semi-structured data.
+*Real s-expressions mixed with fake s-expressions! What a country!*
+
+A binary data format for semi-structured data. More soon.
 
 ## Usage
 
