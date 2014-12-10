@@ -59,7 +59,7 @@
         \S (.stringValue expr)
         \B (.bytes expr)
         \n nil
-        \z (if (.byteValue expr) true false)
+        \z (not (= 0 (.byteValue expr)))
         \b (.byteValue expr)
         \s (.shortValue expr)
         \c (.charValue expr)
