@@ -31,6 +31,41 @@ The format here is plain (Rivest) s-expressions, encoded in the following manner
 * Sets are written similarly as lists or vectors, but the first element is an atom with byte `s`.
 * Maps are written as a list of key/value pairs, with an atom with value `m` at the beginning.
 
+Some examples, from the repl:
+
+    user=> (require '[yason.core :refer :all])
+    nil
+    user=> (encode-string (byte 42))
+    "[b]\"*\""
+    user=> (encode-string (short 42))
+    "[s]#002a#"
+    user=> (encode-string \A)
+    "[c]#0041#"
+    user=> (encode-string (int 42))
+    "[i]#0000002a#"
+    user=> (encode-string (long 42)) ; note, longs are converted to what can contain the value
+    "[b]\"*\""
+    user=> (encode-string 400000000000)
+    "[l]#0000005d21dba000#"
+    user=> (encode-string 3.14159)
+    "[d]#400921f9f01b866e#"
+    user=> (encode-string (byte-array [1 2 3 4 5 6 7 8 9]))
+    "[B]|AQIDBAUGBwgJ|"
+    user=> (encode-string "serialize this!")
+    "[S]\"serialize this!\""
+    user=> (encode-string :keyword)
+    "[S]keyword"
+    user=> (encode-string (bigint 10000000000000000000000000000))
+    "[I]|IE/OXj4lAmEQAAAA|"
+    user=> (encode-string (bigdec 3.14159))
+    "[D]\"3.14159\""
+    user=> (encode-string [:a :list :of :items])
+    "(l [S]a [S]list [S]of [S]items)"
+    user=> (encode-string #{:a :set :of :items})
+    "(s [S]set [S]items [S]of [S]a)"
+    user=> (encode-string {:type "maps" :works-too true})
+    "(m type [S]maps \"works-too\" [z]#01#)"
+
 ## License
 
 Copyright © 2014 FIXME
