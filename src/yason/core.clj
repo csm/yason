@@ -3,7 +3,8 @@
   (:import [org.metastatic.sexp4j ExpressionList Atom CanonicalWriter CanonicalParser AdvancedWriter AdvancedWriter$Builder DisplayHint Primitives AdvancedParser Expression]
            [org.metastatic.sexp4j.mapper MapperException]
            [java.util Optional]
-           [java.io ByteArrayOutputStream ByteArrayInputStream]))
+           [java.io ByteArrayOutputStream ByteArrayInputStream]
+           (clojure.lang BigInt)))
 
 (defn encode-key
   [key]
@@ -45,6 +46,7 @@
     (instance? Double obj) (.withHint (Atom/atom obj) (byte \d))
     (instance? BigInteger obj) (.withHint (new Atom (.toByteArray obj)) (byte \I))
     (instance? BigDecimal obj) (.withHint (Atom/atom (.toString obj)) (byte \D))
+    (instance? BigInt obj) (.withHint (new Atom (.toByteArray (.toBigInteger obj))) (byte \I))
     true (throw (MapperException. (str "can't encode that object: " (type obj))))))
 
 (defn decode
@@ -111,7 +113,7 @@
 
 (defn encode-string
   "Encode an object into an expression, then serialize that expression
-  "
+  in advanced format, returning a string."
   ([obj] (encode-string obj 80 2))
   ([obj line-length indent-size]
     (let [out (ByteArrayOutputStream.)]
@@ -119,5 +121,6 @@
       (String. (.toByteArray out)))))
 
 (defn decode-string
+  "Decode a string expression in advanced format into an object."
   [buf]
-  (decode-stream buf :advanced))
+  (decode-stream (.getBytes buf "UTF-8") :advanced))
