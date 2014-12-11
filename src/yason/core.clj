@@ -2,7 +2,7 @@
   (:require [clojure.java.io :refer [input-stream]])
   (:import [org.metastatic.sexp4j ExpressionList Atom CanonicalWriter CanonicalParser AdvancedWriter AdvancedWriter$Builder DisplayHint Primitives AdvancedParser Expression]
            [org.metastatic.sexp4j.mapper MapperException]
-           [java.util Optional]
+           [com.google.common.base Optional]
            [java.io ByteArrayOutputStream ByteArrayInputStream]
            (clojure.lang BigInt)))
 
@@ -18,10 +18,10 @@
                                       (into [(Atom/atom ^Byte (byte \m))]
                                             (flatten (map #(list (Atom/atom (encode-key (first %)))
                                                                  (encode (second %))) obj)))))
-    (or (seq? obj) (vector? obj)) (ExpressionList/list (into-array
+    (or (seq? obj) (vector? obj)) (ExpressionList/list (into-array Expression
                                                          (into [(Atom/atom ^Byte (byte \l))]
                                                            (map encode obj))))
-    (set? obj) (ExpressionList/list (into-array
+    (set? obj) (ExpressionList/list (into-array Expression
                                       (into [(Atom/atom ^Byte (byte \s))]
                                             (map encode obj))))
     (string? obj) (.withHint (Atom/atom ^String obj) (byte \S))
